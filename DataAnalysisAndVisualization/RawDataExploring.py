@@ -15,3 +15,19 @@ def CheckCommodityMissings(mineral: min.MineralData) -> None:
 
     print('Number of all missing commodities')
     print(len(df.loc[(df['commod1'].isnull()) & (df['commod2'].isnull()) & (df['commod3'].isnull())]))
+
+
+def CheckRegion(mineral: min.MineralData) -> None:
+    df = mineral.mineral_data
+
+    print(df['region'].isnull().sum())
+    print(df['region'].unique())
+
+def CheckUniques(mineral: min.MineralData) -> None:
+    df = mineral.mineral_data
+
+    print(df.nunique())
+
+
+def CheckWorkType(mineral: min.MineralData) -> None:
+    df = mineral.mineral_data

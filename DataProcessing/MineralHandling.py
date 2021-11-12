@@ -12,6 +12,8 @@ class MineralData(object):
 
     # I also want to save some intermediate parts of calculations for use later
     commodity_list = []
+    ore_list = []
+    gangue_list = []
 
     def __init__(self, address):
         self.mineral_data = pd.read_csv(address)
@@ -41,3 +43,51 @@ class MineralData(object):
             df[commodity] = np.where((df['commod1'].str.contains(commodity)) | (df['commod2'].str.contains(commodity)) | (df['commod3'].str.contains(commodity)), True, False)
 
         self.mineral_data = df.drop(columns=['commod1','commod2','commod3'])
+
+
+    def correct_ore(self):
+        """Converts ore to a set of variables for each group"""
+        df = self.mineral_data
+
+        df = pw.df_stringsplit(df, 'ore', ',')
+
+        newcols = df[list(set(df.columns.to_numpy()).difference(set(self.mineral_data.columns.to_numpy())))]
+
+        # Find Unique Ores
+        unique_ores = []
+        for i in range(0, len(newcols.columns)):
+            s = newcols.iloc[:, i]
+            s = s.loc[s.notnull()].unique().tolist()
+            unique_ores = list(set().union(unique_ores, s))
+        self.ore_list = unique_ores
+
+        # Refresh df to remove temporary ore columns
+        df = self.mineral_data
+        for ore in unique_ores:
+            df[ore] = np.where(df['ore'].str.contains(ore), True, False)
+
+        self.mineral_data = df.drop(columns=['ore'])
+
+
+    def correct_gangue(self):
+        """Converts ore to a set of variables for each group"""
+        df = self.mineral_data
+
+        df = pw.df_stringsplit(df, 'gangue', ',')
+
+        newcols = df[list(set(df.columns.to_numpy()).difference(set(self.mineral_data.columns.to_numpy())))]
+
+        # Find Unique Ores
+        unique_gangue = []
+        for i in range(0, len(newcols.columns)):
+            s = newcols.iloc[:, i]
+            s = s.loc[s.notnull()].unique().tolist()
+            unique_gangue = list(set().union(unique_gangue, s))
+        self.gangue_list = unique_gangue
+
+        # Refresh df to remove temporary ore columns
+        df = self.mineral_data
+        for gangue in unique_gangue:
+            df[gangue] = np.where(df['gangue'].str.contains(gangue), True, False)
+
+        self.mineral_data = df.drop(columns=['gangue'])
