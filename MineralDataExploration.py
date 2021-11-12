@@ -13,4 +13,7 @@ settings.PandasInit()
 # Import and Explore Raw Data
 mineral1 = mineral.MineralData(r"C:\Users\wesley.neuman\PycharmProjects\MineralDataExploration\RawData\Mineral ores round the world.csv")
 
+
+# Process data based on explorations
 mineral1.correct_commodity()
+print(mineral1.mineral_data.head())
