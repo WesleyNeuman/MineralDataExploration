@@ -14,6 +14,7 @@ class MineralData(object):
     commodity_list = []
     ore_list = []
     gangue_list = []
+    work_type_list = []
 
     def __init__(self, address):
         self.mineral_data = pd.read_csv(address)
@@ -91,3 +92,29 @@ class MineralData(object):
             df[gangue] = np.where(df['gangue'].str.contains(gangue), True, False)
 
         self.mineral_data = df.drop(columns=['gangue'])
+
+
+    def correct_worktype(self):
+        """Converts work type to a set of variables for each group"""
+        df = self.mineral_data
+
+        # Break apart work_type
+        df = pw.df_stringsplit(df, 'work_type', ',')
+
+        newcols = df[list(set(df.columns.to_numpy()).difference(set(self.mineral_data.columns.to_numpy())))]
+
+        # Find all unique commodities
+        unique_work_types = []
+        for i in range(0, len(newcols.columns)):
+            s = newcols.iloc[:, i]
+            s = s.loc[s.notnull()].unique().tolist()
+            unique_work_types = list(set().union(unique_work_types, s))
+        self.work_type_list = unique_work_types
+
+        # Refresh df to remove temporary commodity columns
+        df = self.mineral_data
+        for work_type in unique_work_types:
+            df[work_type] = np.where(
+                df['work_type'].str.contains(work_type), True, False)
+
+        self.mineral_data = df.drop(columns=['work_type'])
