@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 import numpy as np
 import time
-import PandasWrappers as pw
+import WesleysPythonToolkit.PandasWrappers as pw
 
 class MineralData(object):
 
@@ -88,6 +88,7 @@ class MineralData(object):
 
         # Refresh df to remove temporary ore columns
         df = self.mineral_data
+        print(df)
         for gangue in unique_gangue:
             df[gangue] = np.where(df['gangue'].str.contains(gangue), True, False)
 
@@ -99,7 +100,7 @@ class MineralData(object):
         df = self.mineral_data
 
         # Break apart work_type
-        df = pw.df_stringsplit(df, 'work_type', ',')
+        df = pw.df_stringsplit(df, 'work_type', splitchar=r'[,/]')
 
         newcols = df[list(set(df.columns.to_numpy()).difference(set(self.mineral_data.columns.to_numpy())))]
 

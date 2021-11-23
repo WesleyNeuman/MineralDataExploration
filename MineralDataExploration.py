@@ -1,11 +1,12 @@
 # External Modules
 import pandas as pd
 import numpy as np
-import PandasWrappers as pw
+import WesleysPythonToolkit.PandasWrappers as pw
 
 # Internal Modules
 import DataProcessing.MineralHandling as mineral
-import DataAnalysisAndVisualization.RawDataExploring as explorer
+import DataAnalysisAndVisualization.RawDataExploring as rExp
+import DataAnalysisAndVisualization.ProcessedDataExploring as pExp
 import Misc.SettingsMethods as settings
 
 # Initialize Environment
@@ -22,8 +23,7 @@ print()
 #mineral1.correct_commodity()
 #mineral1.correct_ore()
 #mineral1.correct_gangue()
-print(mineral1.mineral_data['work_type'].unique())
-mineral1.correct_worktype()
-print(mineral1.mineral_data.head())
+#mineral1.correct_worktype()
 
 # Exploring Processed Data
+pExp.play_with_graphs(mineral1.mineral_data)
